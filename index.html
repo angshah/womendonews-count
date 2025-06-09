@@ -1,54 +1,28 @@
-<!-- Load PapaParse -->
-<script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Women Do News Stats</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 
-<!-- Your Stats Block -->
-<div class="wp-block-group alignfull has-light-gray-color has-secondary-background-color has-text-color has-background">
-  <h2 class="wp-block-heading"><strong>Women Do News by the numbers…</strong></h2>
-
-  <div class="wp-block-columns is-style-borders">
-    <div class="wp-block-column">
-      <h1 class="wp-block-heading has-text-align-center" style="font-size:200px">
-        <span id="num1">--</span>
-      </h1>
-      <h2 class="wp-block-heading has-text-align-center">biographies added</h2>
-    </div>
-
-    <div class="wp-block-column">
-      <h1 class="wp-block-heading has-text-align-center" style="font-size:200px">
-        <span id="num2">--</span>
-      </h1>
-      <h2 class="wp-block-heading has-text-align-center">biographies improved</h2>
-    </div>
-
-    <div class="wp-block-column">
-      <h1 class="wp-block-heading has-text-align-center" style="font-size:200px">
-        <span id="num3">--</span>
-      </h1>
-      <h2 class="wp-block-heading has-text-align-center">biographies waiting to be written</h2>
-    </div>
-  </div>
-</div>
-
-<!-- Script to load CSV data -->
-<script>
-  const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRus4kFg2V9ITptF_g9OZnYV399uqeSrjKKMD8hJZGmKFZs275TDJy1ZxZDVZv_KB5Aed5gjK4_EL78/pub?gid=1403714690&single=true&output=csv';
-
-  Papa.parse(csvUrl, {
-    download: true,
-    complete: function(results) {
-      const rows = results.data;
-      const row27 = rows[26]; // Row 27 is index 26
-
-      if (row27) {
-        document.getElementById('num1').textContent = row27[1] || '--';  // B27
-        document.getElementById('num2').textContent = row27[5] || '--';  // F27
-        document.getElementById('num3').textContent = row27[10] || '--'; // K27
-      } else {
-        console.error("Row 27 not found.");
-      }
-    },
-    error: function(err) {
-      console.error("Failed to load CSV:", err);
+    body {
+      background-color: #f7f9fb;
+      font-family: 'Open Sans', sans-serif;
+      color: #333333;
+      margin: 2rem;
     }
-  });
-</script>
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .stat {
+      background-color: #305063;
+      color: white;
+      padding: 2rem;
