@@ -26,3 +26,75 @@
       background-color: #305063;
       color: white;
       padding: 2rem;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgb(48 80 99 / 0.3);
+    }
+
+    .stat h1 {
+      font-size: 5rem;
+      margin: 0 0 0.3rem 0;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .stat h2 {
+      font-weight: 400;
+      font-size: 1.3rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="stats-grid">
+    <div class="stat">
+      <h1 id="bio-added">–</h1>
+      <h2>biographies added</h2>
+    </div>
+    <div class="stat">
+      <h1 id="bio-improved">–</h1>
+      <h2>biographies improved</h2>
+    </div>
+    <div class="stat">
+      <h1 id="bio-waiting">–</h1>
+      <h2>biographies waiting to be written</h2>
+    </div>
+    <div class="stat">
+      <h1 id="total-noms">–</h1>
+      <h2>total nominations</h2>
+    </div>
+  </div>
+
+  <script>
+    // CSV URL for published Google Sheet
+    const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRus4kFg2V9ITptF_g9OZnYV399uqeSrjKKMD8hJZGmKFZs275TDJy1ZxZDVZv_KB5Aed5gjK4_EL78/pub?gid=1403714690&single=true&output=csv';
+
+    fetch(csvUrl)
+      .then(response => response.text())
+      .then(data => {
+        const rows = data.trim().split('\n').map(row => {
+          // Parse CSV row - simple split on commas (works if no commas inside data)
+          // For more complex CSV, use a proper CSV parser
+          return row.split(',');
+        });
+
+        // Row 27 means index 26 (zero-based)
+        const row = rows[26];
+
+        if (row) {
+          // Assign values, fallback to "–" if missing
+          document.getElementById('bio-added').textContent = row[1] || '–';   // B27 (index 1)
+          document.getElementById('bio-improved').textContent = row[5] || '–'; // F27 (index 5)
+          document.getElementById('bio-waiting').textContent = row[10] || '–'; // K27 (index 10)
+          document.getElementById('total-noms').textContent = row[9] || '–';   // J27 (index 9)
+        }
+      })
+      .catch(error => {
+        console.error('Error loading CSV:', error);
+      });
+  </script>
+</body>
+</html>
+
