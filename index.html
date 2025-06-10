@@ -45,6 +45,23 @@
       letter-spacing: 0.06em;
       margin: 0;
     }
+
+    /* Responsive styles */
+    @media (max-width: 600px) {
+      .stats-grid {
+        grid-template-columns: 1fr; /* Stack vertically */
+        max-width: 100%;
+        gap: 1.5rem;
+      }
+
+      .stat h1 {
+        font-size: 3.5rem; /* smaller font on mobile */
+      }
+
+      body {
+        margin: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -67,34 +84,29 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script>
-    // CSV URL for published Google Sheet
     const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRus4kFg2V9ITptF_g9OZnYV399uqeSrjKKMD8hJZGmKFZs275TDJy1ZxZDVZv_KB5Aed5gjK4_EL78/pub?gid=1403714690&single=true&output=csv';
 
-    fetch(csvUrl)
-      .then(response => response.text())
-      .then(data => {
-        const rows = data.trim().split('\n').map(row => {
-          // Parse CSV row - simple split on commas (works if no commas inside data)
-          // For more complex CSV, use a proper CSV parser
-          return row.split(',');
-        });
+    Papa.parse(csvUrl, {
+      download: true,
+      complete: function(results) {
+        const rows = results.data;
+        const row = rows[26]; // zero-based index for row 27
 
-        // Row 27 means index 26 (zero-based)
-        const row = rows[26];
-
-        if (row) {
-          // Assign values, fallback to "–" if missing
+        if(row) {
           document.getElementById('bio-added').textContent = row[1] || '–';   // B27 (index 1)
           document.getElementById('bio-improved').textContent = row[5] || '–'; // F27 (index 5)
           document.getElementById('bio-waiting').textContent = row[10] || '–'; // K27 (index 10)
           document.getElementById('total-noms').textContent = row[9] || '–';   // J27 (index 9)
+        } else {
+          console.warn('Row 27 not found in CSV data.');
         }
-      })
-      .catch(error => {
-        console.error('Error loading CSV:', error);
-      });
+      },
+      error: function(err) {
+        console.error('CSV loading error:', err);
+      }
+    });
   </script>
 </body>
 </html>
-
